@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-node-deployment
+spec:
+  selector:
+    matchLabels:
+      app: hello-node-deployment
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: hello-node-deployment
+    spec:
+      containers:
+        - name: hello-node
+          image: hello-node:v5
+          volumeMounts:
+            - name: app-secret
+              mountPath: "/usr/app/env"
+              readOnly: true
+          ports:
+            - name: api-port
+              containerPort: 8080
+          env:
+            - name: CONFIG_HASH
+              value: ${CONFIG_HASH}
+      volumes:
+        - name: app-secret
+          secret:
+            secretName: hello-node-env
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: hello-node-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: hello-node-deployment
+  ports:
+  - name: http
+    protocol: TCP
+    targetPort: api-port
+    port: 8081
