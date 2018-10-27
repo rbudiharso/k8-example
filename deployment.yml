@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: hello-node
-          image: hello-node:v5
+          image: 876683363342.dkr.ecr.ap-southeast-1.amazonaws.com/hello-node:v5
           volumeMounts:
             - name: app-secret
               mountPath: "/usr/app/env"
@@ -42,4 +42,4 @@ spec:
   - name: http
     protocol: TCP
     targetPort: api-port
-    port: 8081
+    port: 80
